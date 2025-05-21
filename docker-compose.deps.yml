@@ -1,0 +1,10 @@
+services:
+  yugabyte:
+    image: "yugabytedb/yugabyte:2.25.1.0-b381"
+    ports:
+      - "7000:7000"
+      - "9000:9000"
+      - "15433:15433"
+      - "5433:5433"
+      - "9042:9042"
+    command: bin/yugabyted start --background=false

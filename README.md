@@ -8,6 +8,45 @@ Over time, this repo might become populated with some bloat for those that are m
 ## Project Structure
 This project's structure is dead fucking simple. All directories attempt to be WYSIWYG. If it is labeled "backend", that's probably the backend. There are some concepts or ideas you just have to be aware of in this project's ecosystem.
 
+The easiest is to build the whole project and run it in a container.
+```shell
+docker compose up --build
+docker compose down
+```
+
+Development can be done faster if you open up a terminal with 3 tabs.
+
+There is a docker compose file that only runs the dependencies for the project.
+```shell
+docker compose -f docker-compose.deps.yml up
+docker compose -f docker-compose.deps.yml down # this ensures the data is destroyed
+```
+
+This will start the backend.
+```shell
+go run .
+```
+
+This is how to start the frontend.
+```shell
+cd frontend
+npm run dev
+```
+
+At this point, changes you make to the backend will be reflected in the frontend. Vite server is configured to proxy requests to the backend on port 8080.
+
+With both frontend and backend running, note the following:
+- You should be accessing everything from the frontend in the browser. 
+- The Vite server for the frontend is setup to proxy requests to the backend on port 8080.
+- By working this way, you get a hot reload experience for the frontend despite having to restart the backend for changes.
+
+
+If you need to access the Yugabyte database, you can do so with the following command:
+```shell
+docker exec -it fullstack-yugabyte-1 ysqlsh -h yugabyte
+```
+
+
 ### Frontend
 A lot of magic is happening in this directory because my plan is to offload all frontend work to GitHub Copilot. I don't want to be a frontend dev, but I've found that with the right tech stack available, GitHub Copilot is kind of a champ.
 
