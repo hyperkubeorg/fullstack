@@ -24,7 +24,7 @@ run-frontend:
 
 # Run the backend
 run-backend: build-frontend
-	go mod tidy && go run .
+	go mod tidy && DB_AUTO_INITIALIZE_SCHEMA=true go run .
 
 # Run only the service
 services-up:
