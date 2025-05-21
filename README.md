@@ -10,41 +10,34 @@ This project's structure is dead fucking simple. All directories attempt to be W
 
 The easiest is to build the whole project and run it in a container.
 ```shell
-docker compose up --build
-docker compose down
+make compose-up # Control+C to stop
+make compose-down # Purges containers and data.
 ```
 
-Development can be done faster if you open up a terminal with 3 tabs.
+The prior method doesn't rely on any cached modules and is slow for iterating.
 
-There is a docker compose file that only runs the dependencies for the project.
+If you would like to iterate fast, open 3 terminal tabs and a code editor fixed on the root directory of this project.
+
+First terminal, start the data services for development.
 ```shell
-docker compose -f docker-compose.deps.yml up
-docker compose -f docker-compose.deps.yml down # this ensures the data is destroyed
-```
+make services-up # Control+C to stop
+make services-down # Purges containers and data.
 
-This will start the backend.
-```shell
-go run .
-```
-
-This is how to start the frontend.
-```shell
-cd frontend
-npm run dev
-```
-
-At this point, changes you make to the backend will be reflected in the frontend. Vite server is configured to proxy requests to the backend on port 8080.
-
-With both frontend and backend running, note the following:
-- You should be accessing everything from the frontend in the browser. 
-- The Vite server for the frontend is setup to proxy requests to the backend on port 8080.
-- By working this way, you get a hot reload experience for the frontend despite having to restart the backend for changes.
-
-
-If you need to access the Yugabyte database, you can do so with the following command:
-```shell
+# These are services you might want to access during development.
 docker exec -it fullstack-yugabyte-1 ysqlsh -h yugabyte
 ```
+
+Second terminal, start the backend. You will CTRL+C this and restart it for backend changes. 
+```shell
+make run-backend
+```
+
+Third terminal, start the frontend. You will navigate this in your browser. Vite server is configured to proxy `/api` to the backend you have in the last terminal.
+```shell
+make run-frontend
+```
+
+At this point if you're working on a component or part of the frontend, that will auto refresh in the browser. You still have to partly touch the terminal for the backend changes to reflect, but this is guaranteed to be quick to iterate on.
 
 
 ### Frontend
