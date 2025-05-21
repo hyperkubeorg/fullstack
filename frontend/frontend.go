@@ -3,6 +3,7 @@ package frontend
 import (
 	"bytes"
 	"embed"
+	"io"
 	"io/fs"
 	"log"
 	"net/http"
@@ -52,12 +53,19 @@ func serveIndexHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "File not found", http.StatusNotFound)
 		return
 	}
-
 	defer file.Close()
-	stat, _ := file.Stat()
-	content, err := fs.ReadFile(Content, "index.html")
+
+	stat, err := file.Stat()
 	if err != nil {
-		http.Error(w, "File not found", http.StatusNotFound)
+		log.Printf("Error getting file stat for index.html: %v", err)
+		http.Error(w, "Failed to get file info", http.StatusInternalServerError)
+		return
+	}
+
+	content, err := io.ReadAll(file)
+	if err != nil {
+		log.Printf("Error reading file content for index.html: %v", err)
+		http.Error(w, "Failed to read file", http.StatusInternalServerError)
 		return
 	}
 	http.ServeContent(w, r, "index.html", stat.ModTime(), bytes.NewReader(content))
@@ -98,12 +106,25 @@ func AddRoutes(r *mux.Router) (*mux.Router, error) {
 			log.Printf("Serving %s", "/"+path)
 
 			r.HandleFunc("/"+path, func(w http.ResponseWriter, r *http.Request) {
-				file, _ := Content.Open(path)
-				defer file.Close()
-				stat, _ := file.Stat()
-				content, err := fs.ReadFile(Content, path)
+				file, err := Content.Open(path)
 				if err != nil {
+					log.Printf("Error opening file %s: %v", path, err)
 					http.Error(w, "File not found", http.StatusNotFound)
+					return
+				}
+				defer file.Close()
+
+				stat, err := file.Stat()
+				if err != nil {
+					log.Printf("Error getting file stat for %s: %v", path, err)
+					http.Error(w, "Failed to get file info", http.StatusInternalServerError)
+					return
+				}
+
+				content, err := io.ReadAll(file)
+				if err != nil {
+					log.Printf("Error reading file content for %s: %v", path, err)
+					http.Error(w, "Failed to read file", http.StatusInternalServerError)
 					return
 				}
 				http.ServeContent(w, r, path, stat.ModTime(), bytes.NewReader(content))
