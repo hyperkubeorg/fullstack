@@ -1,0 +1,24 @@
+services:
+  yugabyte:
+    image: "yugabytedb/yugabyte:2.25.1.0-b381"
+    ports:
+      - "7000:7000"
+      - "9000:9000"
+      - "15433:15433"
+      - "5433:5433"
+      - "9042:9042"
+    command: bin/yugabyted start --background=false
+  fullstack:
+    build:
+      context: .
+      args:
+        BINARY_NAME: "fullstack"
+    environment:
+      BIND_ADDR: "0.0.0.0:8080"
+      DATABASE_URI: "host=yugabyte port=5433 user=yugabyte password= dbname=yugabyte sslmode=disable"
+      DB_AUTO_INITIALIZE_SCHEMA: "true"
+    ports:
+      - "8080:8080"
+    command: main
+    depends_on:
+      - yugabyte
