@@ -101,6 +101,8 @@ This is fine for non-sensitive information like a social media site.
 
 For secure document exchange, access control might need to be manageable. This might be doable with CephFS's S3 implementation, or by just using a bigger cloud provider.
 
+Regarding clients, [minio-go](https://github.com/minio/minio-go) is a decent pick for S3-compatible object storage.
+
 ### Alternative Databases
 Dgraph looks interesting for a GraphQL database, but I'm questioning its consistency guarantees. They provide a decent helm chart for testing.
 
