@@ -9,6 +9,8 @@ import (
 
 func AddRoutes(r *mux.Router) (*mux.Router, error) {
 	r.HandleFunc("/api/v1/time", timeHandler).Methods("GET")
+	r.HandleFunc("/api/v1/auth/signup", signupHandler).Methods("POST")
+	r.HandleFunc("/api/v1/auth/login", loginHandler).Methods("POST")
 
 	return r, nil
 }
@@ -22,7 +24,7 @@ func timeHandler(w http.ResponseWriter, r *http.Request) {
 			Data    interface{} `json:"data"`
 		}{
 			Status:  "SUCCESS",
-			Message: "User created successfully.",
+			Message: "Time has been retrieved.",
 			Data: map[string]interface{}{
 				"current_time_utc": time.Now().UTC().Format(time.RFC3339),
 			},
