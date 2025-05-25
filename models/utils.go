@@ -42,6 +42,10 @@ func GetUserFromRequest(r *http.Request) (*User, error) {
 		return nil, nil
 	}
 
+	if user.IsBanned {
+		return nil, fmt.Errorf("user is banned")
+	}
+
 	return &user, nil
 }
 
