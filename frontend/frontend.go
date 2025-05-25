@@ -91,6 +91,7 @@ func AddRoutes(r *mux.Router) (*mux.Router, error) {
 	r.HandleFunc("/_/{boardname}", serveIndexHandler).Methods("GET")
 	r.HandleFunc("/auth/login", serveIndexHandler).Methods("GET")
 	r.HandleFunc("/auth/signup", serveIndexHandler).Methods("GET")
+	r.HandleFunc("/auth/status", serveIndexHandler).Methods("GET")
 
 	// list all files in views.EmbeddedFS
 	err := fs.WalkDir(Content, ".", func(path string, d fs.DirEntry, err error) error {
