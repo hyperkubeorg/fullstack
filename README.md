@@ -5,6 +5,9 @@ In making this repo, I was specifically reproducing a minimalistic template of a
 
 Over time, this repo might become populated with some bloat for those that are minimalist. You may be interested in reviewing the commit history from before the creation of this README.md. I've attempted to take care in annotating commits with what happened in the repo to reach what I felt was a minimal template to start projects from.
 
+## Examples Implemented
+- Auth/Users
+
 ## Project Structure
 This project's structure is dead fucking simple. All directories attempt to be WYSIWYG. If it is labeled "backend", that's probably the backend. There are some concepts or ideas you just have to be aware of in this project's ecosystem.
 
@@ -108,30 +111,6 @@ What this means though is great care must be made to keep things safe in the bac
 - It is easier to not hold sensitive information than it is to maintain an email in the database. Good apps should be making data useless in the event of a data leak.
 - Establishing and documenting repeatable patterns will be helpful for reducing risk.
 - Some of the risk can be mitigated by clever service choices. I want to stick to things I can operate in a Kubernetes cluster.
-
-# Ideas in the Oven
-
-## Auth System
-An example auth system will be added to this repo in the future. I'm currently rewriting a prototype I made. 
-
-These are some key points I'm hitting in the system design:
-
-- User Model
-  - Email addresses are stored as sha512 hashes. 
-  - All passwords have unique sha512 salts.
-  - Administrator and Banned flags
-
-- Session Tokens Model
-  - Session tokens are random sha512-like strings (primary key)
-
-Users should be able to do the following:
-- Create Account
-- Login (simple cookie with session token)
-- Logout (clears token)
-- Admin Only Page
-
-# Open Ended Issues
-- Email... There isn't a password recovery method yet because I need to pick a solve for email.
 
 # Why AGPLv3
 This is just the license I'm choosing for my projects. You replace that with whatever your project needs. 
