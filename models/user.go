@@ -10,7 +10,7 @@ import (
 )
 
 type User struct {
-	Base
+	BaseUUID
 	Name            string `gorm:"uniqueIndex;not null"`
 	EmailHash       string `gorm:"uniqueIndex;not null"`
 	Email           string `gorm:"-"`
@@ -32,7 +32,7 @@ func (u *User) BeforeSave(tx *gorm.DB) (err error) {
 	}
 
 	// Call Base.BeforeSave if needed
-	if err = u.Base.BeforeSave(tx); err != nil {
+	if err = u.BaseUUID.BeforeSave(tx); err != nil {
 		return err
 	}
 
@@ -40,7 +40,7 @@ func (u *User) BeforeSave(tx *gorm.DB) (err error) {
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
-	if err = u.Base.BeforeCreate(tx); err != nil {
+	if err = u.BaseUUID.BeforeCreate(tx); err != nil {
 		return err
 	}
 	// Additional logic for User.BeforeCreate, if any
@@ -49,7 +49,7 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 
 func (u *User) BeforeUpdate(tx *gorm.DB) (err error) {
 	// Call Base.BeforeUpdate if needed, as BeforeUpdate is not defined in Base
-	if err = u.Base.BeforeUpdate(tx); err != nil {
+	if err = u.BaseUUID.BeforeUpdate(tx); err != nil {
 		return err
 	}
 	// Additional logic for User.BeforeUpdate, if any
@@ -108,4 +108,10 @@ func (u *User) Validate() error {
 	}
 
 	return nil
+}
+
+func (u *User) IsValidPassword(password string) bool {
+	hasher := sha512.New()
+	hasher.Write([]byte(u.PasswordSalt + password))
+	return fmt.Sprintf("%x", hasher.Sum(nil)) == u.PasswordHash
 }

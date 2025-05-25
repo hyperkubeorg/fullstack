@@ -58,6 +58,16 @@ var DB_AUTO_INITIALIZE_SCHEMA = func() bool {
 	return false
 }()
 
+var DB_AUTO_INITIALIZE_SCHEMA_DROP = func() bool {
+	value := os.Getenv("DB_AUTO_INITIALIZE_SCHEMA_DROP")
+	if value != "" {
+		if v, err := strconv.ParseBool(value); err == nil {
+			return v
+		}
+	}
+	return false
+}()
+
 var db *gorm.DB
 var mu sync.Mutex
 
@@ -106,9 +116,14 @@ func InitializeModels(db *gorm.DB) error {
 	// Automatically migrate models in this array
 	for _, schema := range []interface{}{
 		&User{},
+		&UserSession{},
 	} {
-		// Drop the table if it exists before creating it
-		db.Migrator().DropTable(schema)
+
+		if DB_AUTO_INITIALIZE_SCHEMA_DROP {
+			log.Printf("dropping table for schema: %T", schema)
+			// Drop the table if it exists before creating it
+			db.Migrator().DropTable(schema)
+		}
 
 		if err := db.AutoMigrate(schema); err != nil {
 			return err
