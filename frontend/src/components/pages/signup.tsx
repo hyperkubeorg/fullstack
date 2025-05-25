@@ -123,7 +123,7 @@ export default function SignupPage() {
                 onChange={handleChange}
                 required
               />
-              I agree to the <a href="/auth/signup" className="text-blue-500 underline ml-2">Terms of Service</a>
+              I agree to the <a href="/terms" className="text-blue-500 underline ml-2" target="_blank">Terms of Service</a>
             </label>
           </div>
           <div className="mb-4">
@@ -137,7 +137,7 @@ export default function SignupPage() {
                 onChange={handleChange}
                 required
               />
-              I agree to the <a href="/privacy" className="text-blue-500 underline ml-2">Privacy Policy</a>
+              I agree to the <a href="/privacy" className="text-blue-500 underline ml-2" target="_blank">Privacy Policy</a>
             </label>
           </div>
           <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">Sign Up</button>
