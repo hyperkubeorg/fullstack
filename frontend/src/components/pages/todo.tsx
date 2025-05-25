@@ -24,6 +24,24 @@ export default function TodoPage() {
     fetchUserStatus();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/v1/auth/logout", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        setUserStatus("Not logged in.");
+      } else {
+        setUserStatus("Failed to log out.");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+      setUserStatus("An error occurred. Please try again later.");
+    }
+  };
+
   return (
     <>
       <div className="flex items-center justify-center space-x-4 my-4">
@@ -50,7 +68,8 @@ export default function TodoPage() {
         <span>Auth: </span>
         <a href="/auth/login">Login</a> |
         <a href="/auth/signup">Sign Up</a> |
-        <a href="/auth/status">Status</a>
+        <a href="/auth/status">Status</a> |
+        <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }}>Logout</a>
       </p>
       <div className="mt-4 p-4 border rounded-md">
         <p>{userStatus}</p>
